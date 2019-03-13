@@ -1,0 +1,9 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "title": "JSON SCHEMA User validation",
+    "description": "Schema used to validate a User",
+    "type": "object",
+    "anyOf": [{"required": ["LOGIN", "PASSWORD"]}],
+    "properties":{"LOGIN": {"type": "string"},
+                  "PASSWORD": {"type": "string"}}
+}
