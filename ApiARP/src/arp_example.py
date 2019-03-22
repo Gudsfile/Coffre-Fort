@@ -17,8 +17,11 @@ def my_microservice():
     """
 
     # msg
-    username ="toto"
-    msg = "{\"LOGIN\":\""+username+"\",\"PASSWORD\":\"" + request.headers.get('Authorization') + "\"}"
+    try:
+        username ="toto"
+        msg = "{\"LOGIN\":\""+username+"\",\"PASSWORD\":\"" + request.headers.get('Authorization') + "\"}"
+    except Exception as err:
+        return jsonify({'Error': str(err)})
 
     # zmq
     context = zmq.Context.instance()

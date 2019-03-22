@@ -137,7 +137,7 @@ def usr_parse(msg):
     try:
         j = json.loads(msg)
         if validate_json(j, jsonValid):
-            res = "{\"token\": \"" + str(get_token(j)) + "\"}"
+            res = "{\"TOKEN\": \"" + str(get_token(j))[2:-1] + "\"}"
     except Exception as e:
         print("ERROR in : usr_parse()")
         if DEBUG:
