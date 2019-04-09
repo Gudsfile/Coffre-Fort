@@ -75,7 +75,7 @@ def my_microservice():
 
 
 if __name__ == '__main__':
-    print("arp_sample.py invoked")
+    print("arp.py invoked")
     # pass ip argument
     if len(sys.argv) == 2:
         main(sys.argv[1])

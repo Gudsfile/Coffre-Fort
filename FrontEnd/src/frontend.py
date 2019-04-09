@@ -118,21 +118,6 @@ def secret():
     return redirect(url_for('login'))
 
 
-@app.route('/hello')
-def hello():
-    return render_template('hello.html')
-
-
-@app.route('/safe')
-def safe():
-    return render_template('safe.html')
-
-
-@app.route('/game')
-def game():
-    return render_template('../static/tower-blocks/index.html')
-
-
 if __name__ == '__main__':
     print("frontend.py invoked")
     # pass ip argument
