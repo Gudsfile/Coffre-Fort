@@ -1,0 +1,18 @@
+
+FROM python:3.6
+
+VOLUME /app
+ADD /src/frontend.py /app/
+ADD requirements.txt /app/
+VOLUME /app/static
+ADD /src/static/* /app/static/
+VOLUME /app/templates
+ADD /src/templates/* /app/templates/
+WORKDIR /app
+RUN pip3 install -r requirements.txt
+
+EXPOSE 9003
+
+CMD ["python", "frontend.py", "apiuser", "apiarp"]
+
+#docker build -t python-barcode .

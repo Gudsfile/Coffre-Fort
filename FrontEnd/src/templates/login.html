@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel="stylesheet" href="../static/css/login.css">
+</head>
+
+<body>
+
+<section class="container">
+    <article class="half">
+        <h1>Coffre-fort</h1>
+        <div class="tabs">
+            <span class="tab signin active"><a href="#signin">Se connecter</a></span>
+            <span class="tab signup"><a href="#signup">S'inscrire</a></span>
+        </div>
+        <div class="content">
+            <div class="signin-cont cont">
+                <form action="#" method="post" enctype="multipart/form-data">
+                    <input type="hidden" type="type" name="type" id="type" class="inpt" required="required"
+                           value="signin">
+                    <input type="login" name="login" id="login" class="inpt" required="required"
+                           placeholder="Votre pseudo">
+                    <label for="login">Votre pseudo</label>
+                    <input type="password" name="password" id="password" class="inpt" required="required"
+                           placeholder="Votre mot de passe">
+                    <label for="password">Votre mot de passe</label>
+                    <input type="checkbox" id="remember" class="checkbox" checked>
+                    <div class="submit-wrap">
+                        <input type="submit" value="Se connecter" class="submit">
+                    </div>
+                </form>
+            </div>
+            <div class="signup-cont cont">
+                <form action="#" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="type" id="type" class="inpt" required="required" value="signup">
+                    <input type="login" name="login" id="login" class="inpt" required="required"
+                           placeholder="Votre pseudo">
+                    <label for="login">Votre pseudo</label>
+                    <input type="password" name="password" id="password" class="inpt" required="required"
+                           placeholder="Votre mot de passe">
+                    <label for="password">Votre mot de passe</label>
+                    <div class="submit-wrap">
+                        <input type="submit" value="S'inscrire" class="submit">
+                    </div>
+                </form>
+            </div>
+            {% if error %}
+            <p class="error">{{ error }}
+                {% endif %}
+        </div>
+    </article>
+    <div class="half bg"></div>
+</section>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+<script src="../static/js/login.js"></script>
+
+</body>
+
+</html>

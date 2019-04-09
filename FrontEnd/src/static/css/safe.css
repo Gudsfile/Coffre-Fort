@@ -1,0 +1,151 @@
+* {
+    box-sizing:border-box;
+    margin:0;padding:0;
+    font-family:'Helvetica', sans-serif;
+}
+body {
+  background-color:#DAD7D4;
+}
+h1 {text-align:center;width:100%;}
+.container {
+  width: 300px;
+  height: 300px;
+  position: relative;
+  perspective: 1000px;
+  margin-left:35%;
+  margin-top:5%;
+
+}
+
+#safe {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+}
+
+#safe .side {
+  width: 300px;
+  height: 300px;
+  display: block;
+  position: absolute;
+  background-color:#4A5151;
+}
+#safe .front  { transform: rotateY(   0deg ) translateZ( 150px ); }
+#safe .back   { transform: rotateX( 180deg ) translateZ( 150px ); }
+#safe .right  { transform: rotateY(  90deg ) translateZ( 150px ); }
+#safe .left   { transform: rotateY( -90deg ) translateZ( 150px);}
+#safe .top    { transform: rotateX(  90deg ) translateZ( 150px);}
+#safe .bottom { transform: rotateX( -90deg ) translateZ( 150px);}
+#safe .side {border:1px solid grey;}
+
+
+#safe { transform: translateZ( -100px )rotateX(-20deg) rotatey(-25deg); }
+.keypad {
+   position:relative;
+  z-index:3;
+  padding:5px;
+  width:120px;
+  height:110px;
+  border:1px solid black;
+  margin-top:25%;
+  margin-left:50%;
+  background-color:white;
+}
+ol li {
+  list-style-type:none;
+  display:inline-block;
+  width:30%;
+  text-align:center;
+  border:1px solid black;
+  margin-bottom:2px;
+}
+
+ol li:hover {
+  cursor:pointer;
+}
+
+ol li:active {
+  background-color:black;
+  color:white;
+}
+
+section.results {
+  width:100%;
+  clear:both;
+  margin-top:10%;
+  text-align:center;
+   font-size:1.5em;
+}
+span.results{
+  display:none;
+}
+#wrong,#right {
+  font-size:3em;
+  text-align:center;
+  display:none;
+}
+
+#wrong {
+  color:red;
+}
+
+.open {
+  transform-origin:-10%;
+  height: 120% !important;
+  top: 40px;
+  width: 120% !important;
+  left: -39px;
+  transform-style:preserve3d;
+}
+.treasure {
+  display:none;
+  position:absolute;
+  top: 80%;
+  left: 31%;
+}
+.treasure > div {
+  position:absolute;
+  
+}
+.treasure > div:nth-child(1){
+ left:25px;
+  top:10px;
+}
+
+.treasure > div:nth-child(2){
+ left:-40px;
+ top:25px;
+}
+.treasure > div:nth-child(3){
+ left:4px;
+  top:30px;
+}
+.treasure > div:nth-child(4){
+left: 40px;
+top: -20px;
+
+}
+
+.treasure > div:nth-child(5){
+top: -10px;
+left: -10px;
+
+}
+.coin {
+  width:50px;
+  height:50px;
+  background-color:#FFD700;
+  border-radius:25px;
+  box-shadow:1px 1px 2px black;
+}
+.hints {
+  text-align:center;
+}
+#hint {
+  margin:10px auto;
+}
+
+#anotherHint {
+  display:none;
+}

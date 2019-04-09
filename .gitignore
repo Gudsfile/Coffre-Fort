@@ -1,0 +1,4 @@
+
+\*.DS_Store
+FrontEnd/src/\.DS_Store
+\*\vendor\*

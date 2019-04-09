@@ -14,3 +14,4 @@
 
 ## All 
 * config.json
+* dockerCompose

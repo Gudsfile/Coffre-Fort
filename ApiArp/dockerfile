@@ -1,0 +1,14 @@
+
+FROM python:3.6
+
+VOLUME /app
+ADD /src/* /app/
+ADD requirements.txt /app/
+WORKDIR /app
+RUN pip3 install -r requirements.txt
+
+EXPOSE 9001
+
+CMD ["python", "arp.py", "*"]
+
+#docker build -t python-barcode .

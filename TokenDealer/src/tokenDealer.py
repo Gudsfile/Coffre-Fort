@@ -1,10 +1,8 @@
-# Copyright (c) PyZMQ Developers.
-# This example is in the public domain (CC-0)
-
-
 ###############################################################################################################
 
 import asyncio
+import sys
+
 import zmq.asyncio
 
 from tornado.ioloop import IOLoop
@@ -28,25 +26,30 @@ key = "MIICXAIBAAKBgQC3xqGNIyHq1a5vFaR+anh6n744bwlIQh56yrus/ds/khtsJt+8NHWAYa43T
       "Row4OYdpC1Rb3eGNAkEA0GPF0pjbEmWUZEwkTJmP2ra1Jv2uudZJjjA3KPG7MzJaKZRo0xMZ3mc/K436n2+Hhjv+kmV8EBcodCbQ4mlUnQJBAK" \
       "PneamtIP23pWCM0PDg6nlXGa8EcvYwV7TZejuHW5w="
 
-# todo config.json
-# Url zmq
-urlArpTck = 'tcp://127.0.0.1:9001'
-urlUsrTck = 'tcp://127.0.0.1:9002'
-# urlTckUsr = 'tcp://127.0.0.1:9003'
-# urlTckArp = 'tcp://127.0.0.1:9004'
-
 # Get the JsonScheme
 with open("./userSchem.json", "r") as file:
     jsonValid = json.load(file)
 
+
 ###############################################################################################################
 
-# Tell tornado to use asyncio
-AsyncIOMainLoop().install()
+def main(ip_arp="*", ip_usr="*"):
+    # Url zmq
+    global urlArpTck, urlUsrTck, ctx, queue
+    urlArpTck = "tcp://{}:9001".format(ip_arp)
+    urlUsrTck = "tcp://{}:9002".format(ip_usr)
+    print("Going to bind to: {}".format(urlArpTck))
+    print("Going to bind to: {}".format(urlUsrTck))
 
-# This must be instantiated after the installing the IOLoop
-queue = asyncio.Queue()
-ctx = zmq.asyncio.Context()
+    # Tell tornado to use asyncio
+    AsyncIOMainLoop().install()
+
+    # This must be instantiated after the installing the IOLoop
+    queue = asyncio.Queue()
+    ctx = zmq.asyncio.Context()
+
+    # Start loop
+    zmq_tornado_loop()
 
 
 # Server Pushing
@@ -59,10 +62,12 @@ ctx = zmq.asyncio.Context()
 ###############################################################################################################
 
 async def arp_pulling():
+    global urlArpTck
     await pulling(arp_process, urlArpTck)
 
 
 async def usr_pulling():
+    global urlUsrTck
     await pulling(usr_process, urlUsrTck)
 
 
@@ -76,6 +81,7 @@ def zmq_tornado_loop():
 ###############################################################################################################
 
 async def pulling(process, url):
+    global ctx
     client = ctx.socket(zmq.PAIR)
     client.connect(url)
     while True:
@@ -137,17 +143,17 @@ def usr_parse(msg):
     try:
         j = json.loads(msg)
         if validate_json(j, jsonValid):
-            res = "{\"TOKEN\": \"" + str(get_token(j))[2:-1] + "\"}"
+            res = "{\"LOGIN\": \"" + j['LOGIN'] + "\", \"PASSWORD\": \"" + str(get_token(j))[2:-1] + "\"}"
     except Exception as e:
         print("ERROR in : usr_parse()")
         if DEBUG:
             print(str(e))
+    print(res)
     return res
 
 
 ###############################################################################################################
 
-# todo session time ?
 def get_token(content):
     res = ""
     try:
@@ -187,5 +193,10 @@ def validate_json(dict_to_test, dict_valid):
 
 ###############################################################################################################
 
-if __name__ == '__main__':
-    zmq_tornado_loop()
+if __name__ == "__main__":
+    print("tokenDealer.py invoked")
+    # pass ip argument
+    if len(sys.argv) == 3:
+        main(sys.argv[1], sys.argv[2])
+    else:
+        main()
