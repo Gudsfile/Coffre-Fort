@@ -9,6 +9,6 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 9002
 
-CMD ["python", "user.py", "*", "db"]
+CMD ["python", "user.py", "tokendealer", "db"]
 
 #docker build -t python-barcode .

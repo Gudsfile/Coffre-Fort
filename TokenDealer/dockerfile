@@ -7,6 +7,6 @@ ADD requirements.txt /app/
 WORKDIR /app
 RUN pip3 install -r requirements.txt
 
-CMD ["python", "tokenDealer.py", "apiarp", "apiuser"]
+CMD ["python", "tokenDealer.py"]
 
 #docker build -t python-barcode .

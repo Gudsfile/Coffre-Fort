@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+###############################################################################################################
+
 import bson
 import json
 import sys
@@ -15,9 +17,16 @@ from jsonschema import validate
 from flasgger import Swagger
 from pymongo.errors import ServerSelectionTimeoutError
 
+
+###############################################################################################################
+
+DEBUG = False
+
 app = Flask(__name__)
 swagger = Swagger(app)
 
+
+###############################################################################################################
 
 def main(ip='*', ip_db='*'):
     global url, collection
@@ -25,40 +34,25 @@ def main(ip='*', ip_db='*'):
 
     app.config['MONGO_DBNAME'] = 'users'
     app.config['MONGO_URI'] = 'mongodb://' + ip_db + ':27017/users'
-    '''
-    try:
-        # Connection
-        conn = MongoClient(connect=False)
-        print("Connected successfully!!!", flush=True)
-        # Database
-        db = conn.users
-        # Created or Switched to collection names: my_gfg_collection
-        collection = db.user_collection
-    except:
-        print("Could not connect to MongoDB", flush=True)
-    '''
     dbconnect = False
     while not dbconnect:
         conn = MongoClient('mongodb://' + ip_db + ':27017/', serverSelectionTimeoutMS=5000, connectTimeoutMS=200000)
         try:
-            conn.server_info()  # force connection on a request as the
-            # connect=True parameter of MongoClient seems
-            # to be useless here
+            conn.server_info()  # force connection
             # Database
             db = conn.users
             # Created or Switched to collection names: my_gfg_collection
             collection = db.user_collection
             dbconnect = True
-        except ServerSelectionTimeoutError as err:
-            # do whatever you need
-            print(err)
+        except ServerSelectionTimeoutError as e:
+            if DEBUG:
+                print(e)
             print("Could not connect to MongoDB", flush=True)
 
-    # client = MongoClient('mongodb://' + ip_db + ':27017/')
-    # db = client['test-database']
-    # print(app.url_map, flush=True)
     app.run(debug=True, host='0.0.0.0', port='5002')
 
+
+###############################################################################################################
 
 @app.route('/')
 def index():
@@ -99,7 +93,8 @@ def get_one_user_id(id=None):
         description: Utilisateur trouvé
         type: application/json
       404:
-      	description: Utilisateur non trouvé
+        description: Utilisateur non trouvé
+        type: application/json
     """
     global collection
     if id is None:
@@ -107,14 +102,18 @@ def get_one_user_id(id=None):
     if bson.objectid.ObjectId.is_valid(id):
         u = collection.find_one({"_ID": ObjectId(id)})
         if u is None:
-            return Response(status=404)
+            response = jsonify({'Error': 'Unknown'})
+            response.status_code = 404
+            return response
         else:
             output = ({'_Id': str(u['_ID']), 'Login': u['LOGIN']})
             response = jsonify({'Result': output})
             response.status_code = 200
             return response
     else:
-        return Response(status=404)
+        response = jsonify({'Error': 'Bad request'})
+        response.status_code = 400
+        return response
 
 
 @app.route('/api/user/login', methods=['GET'])
@@ -132,14 +131,17 @@ def get_one_user_login(login=None):
         description: Utilisateur trouvé
         type: application/json
       404:
-      	description: Utilisateur non trouvé
+        description: Utilisateur non trouvé
+        type: application/json
     """
     global collection
     if login is None:
         login = request.args.get('LOGIN')
     u = collection.find_one({"LOGIN": login})
     if u is None:
-        return Response(status=404)
+        response = jsonify({'Error': 'Unknown'})
+        response.status_code = 404
+        return response
     else:
         output = ({'_Id': str(u['_ID']), 'Login': u['LOGIN']})
         response = jsonify({'Result': output})
@@ -169,31 +171,50 @@ def get_one_user_signin(login=None, password=None):
       404:
         description: Utilisateur non trouvé
         type: application/json
+      408:
+        description: Service d'authentification inaccessible
+        type: application/json
     """
-    global collection
+    global collection, url
     if login is None:
         login = request.args.get('LOGIN')
     if password is None:
         password = request.args.get('PASSWORD')
     u = collection.find_one({"LOGIN": login, "PASSWORD": password})
     if u is None:
-        return Response(status=404)
+        response = jsonify({'Error': 'Unknown'})
+        response.status_code = 404
+        return response
     else:
-        global url
         # zmq
         context = zmq.Context.instance()
         socket = context.socket(zmq.PAIR)
-        socket.bind(url)
-        socket.RCVTIMEO = 1000
+        socket.setsockopt(zmq.LINGER, 0)
+        socket.setsockopt(zmq.AFFINITY, 1)
+        socket.setsockopt(zmq.RCVTIMEO, 2000)
+
+        socket.connect(url)
 
         socket.send_string("{\"LOGIN\":\"" + login + "\",\"PASSWORD\":\"" + password + "\"}")
-        msg = socket.recv_string()
+
         try:
+            msg = socket.recv_string()
+            print(msg)
             response = jsonify(msg)
             response.status_code = 200
-        except Exception as err:
-            response = jsonify({'Error': str(err)})
+        except zmq.error.Again as e:
+            if DEBUG:
+                print(str(e))
+            response = jsonify({'Error': 'service down'})
+            response.status_code = 408
+        except Exception as e:
+            if DEBUG:
+                print(str(e))
+            response = jsonify({'Error': 'Unknown'})
             response.status_code = 404
+        finally:
+            socket.close()  # ____POLICY: graceful termination
+            context.term()  # ____POLICY: graceful termination
         return response
 
 
@@ -210,7 +231,14 @@ def add_user():
       200:
         description: Utilisateur ajouté
       400:
-        description: Utilisateur non ajouté
+        description: Pas de json envoyé, utilisateur non ajouté
+        type: application/json
+      403:
+        description: Utilisateur déjà existant et donc non ajouté
+        type: application/json
+      404:
+        description: json invalide, utilisateur non ajouté
+        type: application/json
     """
     global collection
     if request.is_json:
@@ -219,7 +247,9 @@ def add_user():
             dict_valid = json.load(file)
         if validate_json(content, dict_valid):
             if get_one_user_login(content['LOGIN']).status_code == 200:
-                return Response(status=400)
+                response = jsonify({'Error': 'Unauthorized'})
+                response.status_code = 403
+                return response
             else:
                 id = ObjectId()
                 login = content['LOGIN']
@@ -232,12 +262,20 @@ def add_user():
                 collection.insert_one(new_user)
                 return Response(status=200)
         else:
-            print("Invalid json")
-            return Response(status=400)
+            if DEBUG:
+                print("Invalid json")
+            response = jsonify({'Error': 'Unknown'})
+            response.status_code = 404
+            return response
     else:
-        print("Request is not json")
-        return Response(status=400)
+        if DEBUG:
+            print("Request is not json")
+        response = jsonify({'Error': 'Bad request'})
+        response.status_code = 400
+        return response
 
+
+###############################################################################################################
 
 # Check the json
 def validate_json(dict_to_test, dict_valid):
@@ -250,6 +288,8 @@ def validate_json(dict_to_test, dict_valid):
         print("Validation OK")
         return True
 
+
+###############################################################################################################
 
 if __name__ == '__main__':
     print("user.py invoked")

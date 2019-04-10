@@ -1,7 +1,9 @@
 ###############################################################################################################
 
 import asyncio
+import os
 import sys
+import time
 
 import zmq.asyncio
 
@@ -18,17 +20,21 @@ from jsonschema import validate
 # Debug
 DEBUG = False
 
-# Key
-key = "MIICXAIBAAKBgQC3xqGNIyHq1a5vFaR+anh6n744bwlIQh56yrus/ds/khtsJt+8NHWAYa43Te04Ri9Hdhntyv+p3d1AcBr/OrBWrJzZO00Asz" \
-      "/xXRx7uUkTxay4alvTdMBuImEadeWd8AobLM9OfaZCT5rHb1KjPVeuVNzpzA2Eu21xfWCRIeqXeQIDAQABAoGAfJJgH9OYwh5mR1ZcUnTJhhWS" \
-      "U56wpBJtpr6VyQWrAMSBYiZXsrO8knGkLkjcbDDnC4G6wb3A39xMhcl4A1o8/N1p0I7/+/0tVDrIf5qd3NG347jdfSZQE9X5f0wT7gOdAHFW+A" \
-      "wSvehx6YdW/LQE5RJbNi5tJnbBH179GJUNwoECQQDhw0C4x0MC20bvVfmjAebC3zUYHiqb81nKd6tBaKXi/0kRHCO/QhnDfjRyDQOmPfCM4vqR" \
-      "Row4OYdpC1Rb3eGNAkEA0GPF0pjbEmWUZEwkTJmP2ra1Jv2uudZJjjA3KPG7MzJaKZRo0xMZ3mc/K436n2+Hhjv+kmV8EBcodCbQ4mlUnQJBAK" \
-      "PneamtIP23pWCM0PDg6nlXGa8EcvYwV7TZejuHW5w="
+# Key - get the key in the key.txt file, generates a new key if the file was modified a month ago
+key = ''
+if time.time() - os.path.getmtime('key.txt') >= 2500000:
+    os.system('openssl genrsa 1024 > key.txt')
+with open('key.txt', 'r') as f:
+    data = f.read().splitlines(True)
+data = data[1:-1]
+for d in data:
+    key += d[:-1]
+if DEBUG:
+    print(key)
 
 # Get the JsonScheme
-with open("./userSchem.json", "r") as file:
-    jsonValid = json.load(file)
+with open("./userSchem.json", "r") as f:
+    jsonValid = json.load(f)
 
 
 ###############################################################################################################
@@ -50,13 +56,6 @@ def main(ip_arp="*", ip_usr="*"):
 
     # Start loop
     zmq_tornado_loop()
-
-
-# Server Pushing
-# serverArp = ctx.socket(zmq.PAIR)
-# serverArp.bind(urlTckArp)
-# serverUsr = ctx.socket(zmq.PAIR)
-# serverUsr.bind(urlTckUsr)
 
 
 ###############################################################################################################
@@ -83,17 +82,12 @@ def zmq_tornado_loop():
 async def pulling(process, url):
     global ctx
     client = ctx.socket(zmq.PAIR)
-    client.connect(url)
+    client.bind(url)
     while True:
         greeting = await client.recv()
-        print(str(greeting))
-        # process(greeting)
+        if DEBUG:
+            print(str(greeting))
         client.send_string(process(greeting))
-
-
-# def pushing(server, msg):
-#     server.send_string(msg)
-#     asyncio.sleep(1)
 
 
 ###############################################################################################################
@@ -101,10 +95,6 @@ async def pulling(process, url):
 def arp_process(msg):
     # arp_pushing(arp_parse(msg))
     return arp_parse(msg)
-
-
-# def arp_pushing(msg):
-#     pushing(serverArp, msg)
 
 
 def arp_parse(msg):
@@ -132,10 +122,6 @@ def arp_parse(msg):
 def usr_process(msg):
     # usr_pushing(usr_parse(msg))
     return usr_parse(msg)
-
-
-# def usr_pushing(msg):
-#     pushing(serverUsr, msg)
 
 
 def usr_parse(msg):

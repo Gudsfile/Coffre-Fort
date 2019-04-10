@@ -1,0 +1,313 @@
+<div>
+            <style>
+                #thesafeofmystery * {
+                    box-sizing: border-box;
+                    margin: 0;
+                    padding: 0;
+                    font-family: 'Helvetica', sans-serif;
+                }
+
+                #thesafeofmystery bodysafe {
+                    background-color: #DAD7D4;
+                }
+
+                #thesafeofmystery h1safe {
+                    text-align: center;
+                    width: 100%;
+                }
+
+                #thesafeofmystery .containersafe {
+                    width: 300px;
+                    height: 300px;
+                    position: relative;
+                    perspective: 1000px;
+                    margin-left: 35%;
+                    margin-top: 5%;
+
+                }
+
+                #thesafeofmystery #safe {
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    transform-style: preserve-3d;
+                }
+
+                #thesafeofmystery #safe .side {
+                    width: 300px;
+                    height: 300px;
+                    display: block;
+                    position: absolute;
+                    background-color: #4A5151;
+                }
+
+                #thesafeofmystery #safe .front {
+                    transform: rotateY(0deg) translateZ(150px);
+                }
+
+                #thesafeofmystery #safe .back {
+                    transform: rotateX(180deg) translateZ(150px);
+                }
+
+                #thesafeofmystery #safe .right {
+                    transform: rotateY(90deg) translateZ(150px);
+                }
+
+                #thesafeofmystery #safe .left {
+                    transform: rotateY(-90deg) translateZ(150px);
+                }
+
+                #thesafeofmystery #safe .top {
+                    transform: rotateX(90deg) translateZ(150px);
+                }
+
+                #thesafeofmystery #safe .bottom {
+                    transform: rotateX(-90deg) translateZ(150px);
+                }
+
+                #thesafeofmystery #safe .side {
+                    border: 1px solid grey;
+                }
+
+
+                #thesafeofmystery #safe {
+                    transform: translateZ(-100px) rotateX(-20deg) rotatey(-25deg);
+                }
+
+                #thesafeofmystery .keypad {
+                    position: relative;
+                    z-index: 3;
+                    padding: 5px;
+                    width: 120px;
+                    height: 110px;
+                    border: 1px solid black;
+                    margin-top: 25%;
+                    margin-left: 50%;
+                    background-color: white;
+                }
+
+                #thesafeofmystery ol li {
+                    list-style-type: none;
+                    display: inline-block;
+                    width: 30%;
+                    text-align: center;
+                    border: 1px solid black;
+                    margin-bottom: 2px;
+                }
+
+                #thesafeofmystery ol li:hover {
+                    cursor: pointer;
+                }
+
+                #thesafeofmystery ol li:active {
+                    background-color: black;
+                    color: white;
+                }
+
+                #thesafeofmystery section.results {
+                    width: 100%;
+                    clear: both;
+                    margin-top: 10%;
+                    text-align: center;
+                    font-size: 1.5em;
+                }
+
+                #thesafeofmystery span.results {
+                    display: none;
+                }
+
+                #thesafeofmystery #wrong, #right {
+                    font-size: 3em;
+                    text-align: center;
+                    display: none;
+                }
+
+                #thesafeofmystery #wrong {
+                    color: red;
+                }
+
+                #thesafeofmystery .open {
+                    transform-origin: -10%;
+                    height: 120% !important;
+                    top: 40px;
+                    width: 120% !important;
+                    left: -39px;
+                    transform-style: preserve3d;
+                }
+
+                #thesafeofmystery .treasure {
+                    display: none;
+                    position: absolute;
+                    top: 80%;
+                    left: 31%;
+                }
+
+                #thesafeofmystery .treasure > div {
+                    position: absolute;
+
+                }
+
+                #thesafeofmystery .treasure > div:nth-child(1) {
+                    left: 25px;
+                    top: 10px;
+                }
+
+                #thesafeofmystery .treasure > div:nth-child(2) {
+                    left: -40px;
+                    top: 25px;
+                }
+
+                #thesafeofmystery .treasure > div:nth-child(3) {
+                    left: 4px;
+                    top: 30px;
+                }
+
+                #thesafeofmystery .treasure > div:nth-child(4) {
+                    left: 40px;
+                    top: -20px;
+
+                }
+
+                #thesafeofmystery .treasure > div:nth-child(5) {
+                    top: -10px;
+                    left: -10px;
+
+                }
+
+                #thesafeofmystery .coin {
+                    width: 50px;
+                    height: 50px;
+                    background-color: #FFD700;
+                    border-radius: 25px;
+                    box-shadow: 1px 1px 2px black;
+                }
+
+                #thesafeofmystery .hints {
+                    text-align: center;
+                }
+
+                #thesafeofmystery #hint {
+                    margin: 10px auto;
+                }
+
+                #thesafeofmystery #anotherHint {
+                    display: none;
+                }
+            </style>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+        </div>
+
+        <div id="thesafeofmystery">
+            <bodysafe>
+                <h1>The Safe of Mystery</h1>
+                <section class="containersafe">
+                    <div id="safe">
+                        <div class="front side">
+                            <div class="keypad">
+                                <ol class="keys">
+                                    <li>1</li>
+                                    <li>2</li>
+                                    <li>3</li>
+                                    <li>4</li>
+                                    <li>5</li>
+                                    <li>6</li>
+                                    <li>7</li>
+                                    <li>8</li>
+                                    <li>9</li>
+                                    <li>0</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="back side"></div>
+                        <div class="right side"></div>
+                        <div class="left side"></div>
+                        <div class="top side"></div>
+                        <div class="bottom side"></div>
+                    </div>
+                    <div class="treasure">
+                        <div class="coin">
+                        </div>
+                        <div class="coin">
+                        </div>
+                        <div class="coin">
+                        </div>
+                        <div class="coin">
+                        </div>
+                        <div class="coin">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="results">
+                    <span class="results">You have entered:</span>
+                    <span id="entered"></span>
+                </section>
+                <div class="hints">
+                    <button id="hint">Get a hint</button>
+                    <button id="anotherHint">Get another hint</button>
+                </div>
+                <div id="wrong">
+                    <span>Nope! Try Again.</span>
+                </div>
+                <div id="right">
+                    <span>Treasure!!!</span>
+                </div>
+                <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+
+                <script>$('li').click(function(){
+  var code = '66642';
+  var number = $(this).text();
+   $('span.results').show();
+  $('#wrong').hide();
+  $('#entered').append(number);
+  var enteredLength = $('#entered').text().length;
+  var entered = $('#entered').text();
+  if (enteredLength == 5 && entered === code) {
+     $('#entered').empty();
+     $('.keypad').delay( 400 ).fadeOut(0);
+      $('.front').addClass('open').animate({  borderSpacing: -180 }, {
+    step: function(now,fx) {
+      $(this).css('transform','rotateY('+ now +'deg)');         
+    },
+    duration:1000},'linear');
+     $('span.results').hide();
+     $('#right').show();
+    $('#hint,#anotherhint').hide();
+    $('.treasure').fadeIn(2000);
+    }
+ if (enteredLength == 5 && entered !== code)
+  {
+  $('#wrong').show();
+    $('span.results').hide();
+    $('#entered').empty();
+  }            
+});
+
+$('#hint').click(function(){
+  alert('I want to phone satan. [XXX..]');
+  $('#hint').hide();
+  $('#anotherHint').show();
+});
+
+$('#anotherHint').click(function(){
+  alert('Life\'s response. [...XX]');
+   $('#hint').show();
+  $('#anotherHint').hide();
+});</script>
+            </bodysafe>
+        </div>
+    </div>
+<!--
+Copyright (c) 2019 by James Podles (https://codepen.io/jpod/pen/erliB)
+
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->

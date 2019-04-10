@@ -9,6 +9,6 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 9001
 
-CMD ["python", "arp.py", "*"]
+CMD ["python", "arp.py", "tokendealer"]
 
 #docker build -t python-barcode .
