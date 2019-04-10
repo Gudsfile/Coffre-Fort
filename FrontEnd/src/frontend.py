@@ -11,7 +11,17 @@ from flask import Flask, render_template, request, session, json, redirect, url_
 ###############################################################################################################
 
 # Debug
-DEBUG = False
+DEBUG = True
+
+# Key - get the key in the key.txt file, generates a new key if the file was modified a month ago
+key = ''
+with open('key.txt', 'r') as f:
+    data = f.read().splitlines(True)
+data = data[1:-1]
+for d in data:
+    key += d[:-1]
+if DEBUG:
+    print(key)
 
 # App
 app = Flask(__name__, static_url_path='/static')
@@ -20,11 +30,11 @@ app = Flask(__name__, static_url_path='/static')
 ###############################################################################################################
 
 def main(usr='*', arp='*'):
-    global url, url_usr, url_arp
+    global url_usr, url_arp
     url_arp = "{}:5001".format(arp)
     url_usr = "{}:5002".format(usr)
 
-    app.secret_key = 'super secret key' # TODO CHANGE
+    app.secret_key = key
     app.config['SESSION_TYPE'] = 'filesystem'
     app.run(debug=True, host='0.0.0.0', port='5003')
 
