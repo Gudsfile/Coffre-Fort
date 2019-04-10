@@ -1,14 +1,31 @@
 # TODO
 
 
-## ApiUsr
+
+### ApiUsr
+
 * chiffrer le mdp 
 
-## ApiArp
 
 
-## Token
-* chiffrer la clé 
+### ApiArp
 
-## All 
-* dockerCompose
+
+
+### Token
+
+* chaque mois modifier la clé
+* passer à une solution token unique à chaque session
+
+
+
+### FrontEnd
+
+* chaque mois modifier la clé
+* https
+
+
+
+### All
+
+* curve zmq

@@ -49,7 +49,7 @@ def get_token():
         required: true
     responses:
       200:
-        description: Le token envoyé est valide
+        description: Le token envoyé est valide, la ressource est envoyé
       409:
         description: Le token envoyé n'est pas valide
     """

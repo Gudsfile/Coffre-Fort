@@ -70,10 +70,24 @@ async def usr_pulling():
     await pulling(usr_process, urlUsrTck)
 
 
+# async def generate_key():
+#     if time.time() - os.path.getmtime('key.txt') >= 2500000:
+#         os.system('openssl genrsa 1024 > key.txt')
+#         with open('key.txt', 'r') as f:
+#             data = f.read().splitlines(True)
+#         data = data[1:-1]
+#         for d in data:
+#             key += d[:-1]
+#         if DEBUG:
+#             print(key)
+#     time.sleep(2500000)
+
+
 def zmq_tornado_loop():
     loop = IOLoop.current()
     loop.spawn_callback(arp_pulling)
     loop.spawn_callback(usr_pulling)
+    # loop.spawn_callback(generate_key)
     loop.start()
 
 
