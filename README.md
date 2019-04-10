@@ -52,7 +52,7 @@ Now go to http://localhost:5003/
 
 ## Local
 
-#### Python requirements
+### Python requirements
 
     sh install.sh
 
@@ -63,7 +63,7 @@ or
     pip3 install -r ApiUser/requirements.txt
     pip3 install -r FrontEnd/requirements.txt
 
-#### Mongodb
+### Mongodb
 
 ###### Mac OS
 
@@ -83,7 +83,7 @@ stop
 
 ###### Windows
 
-#### Deployement
+### Deployement
 
     python3 arp.py 127.0.0.1 &
     python3 user.py 127.0.0.1 localhost &
@@ -92,7 +92,7 @@ stop
 
 Now go to http://localhost:5003/
 
-#### Test
+## Test
 
 Sign
 
