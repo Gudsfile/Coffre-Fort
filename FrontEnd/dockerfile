@@ -2,16 +2,12 @@
 FROM python:3.6
 
 VOLUME /app
-ADD /src/frontend.py /app/
 ADD requirements.txt /app/
-VOLUME /app/static
-ADD /src/static/* /app/static/
-VOLUME /app/templates
-ADD /src/templates/* /app/templates/
+COPY src/ /app/
 WORKDIR /app
 RUN pip3 install -r requirements.txt
 
-EXPOSE 9003
+EXPOSE 9003 # inutile
 
 CMD ["python", "frontend.py", "apiuser", "apiarp"]
 

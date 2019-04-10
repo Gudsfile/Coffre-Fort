@@ -11,7 +11,7 @@ from flask import Flask, render_template, request, session, json, redirect, url_
 ###############################################################################################################
 
 # Debug
-DEBUG = True
+DEBUG = False
 
 # Key - get the key in the key.txt file, generates a new key if the file was modified a month ago
 key = ''

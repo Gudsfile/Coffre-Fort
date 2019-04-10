@@ -48,6 +48,8 @@ Four services are deployed on the same network.
 
     docker-compose up
 
+Now go to http://localhost:5003/ 
+
 ## Local
 
 #### Python requirements
@@ -87,6 +89,8 @@ stop
     python3 user.py 127.0.0.1 localhost &
     python3 frontend.py 127.0.0.1 127.0.0.1 &
     python3 tokenDealer.py
+
+Now go to http://localhost:5003/
 
 #### Test
 
@@ -134,3 +138,25 @@ Access to the resource
 > {
 >   "Authorization": "KO"
 > }
+
+## Notes 
+
+If the ApiUser doesn't respond, check the console logs :
+
+`apiuser_1      | Could not connect to MongoDB`
+
+The db is not ready, wait for this statement : 
+
+`apiuser_1      |  * Serving Flask app "user" (lazy loading)`
+
+
+## Hint 
+
+<details>
+  <summary>The number of the resource chest is</summary>
+  
+  66642
+
+  (https://github.com/dear-github/dear-github/issues/166)
+  
+</details>
